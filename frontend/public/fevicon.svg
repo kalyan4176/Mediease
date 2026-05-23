@@ -1,0 +1,40 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F9D92"></stop>
+      <stop offset="100%" stop-color="#12B8A5"></stop>
+    </linearGradient>
+  </defs>
+
+  <!-- Circle Background -->
+  <circle cx="256" cy="256" r="220" fill="url(#bg)"></circle>
+
+  <!-- Letter M -->
+  <path d="
+    M170 340
+    V170
+    C170 160 178 152 188 152
+    H198
+    C206 152 212 156 217 163
+    L256 223
+    L295 163
+    C300 156 306 152 314 152
+    H324
+    C334 152 342 160 342 170
+    V340
+    C342 350 334 358 324 358
+    H308
+    C298 358 290 350 290 340
+    V235
+    L270 267
+    C264 276 248 276 242 267
+    L222 235
+    V340
+    C222 350 214 358 204 358
+    H188
+    C178 358 170 350 170 340
+    Z
+  " fill="white"></path>
+
+</svg>
