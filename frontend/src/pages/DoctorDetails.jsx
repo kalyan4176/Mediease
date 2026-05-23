@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import API from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useDialog } from '../context/DialogContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Stethoscope, Star, Calendar, Clock, CreditCard, ShieldCheck, AlertCircle, ArrowLeft, Loader2, Sparkles } from 'lucide-react';
 
@@ -9,6 +10,7 @@ export const DoctorDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { toast } = useDialog();
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) return '';
@@ -62,7 +64,7 @@ export const DoctorDetails = () => {
     }
 
     if (!selectedDay || !selectedSlot) {
-      return alert('Please select an available weekday slot.');
+      return toast('Please select an available weekday slot.', 'error');
     }
 
     setBookingLoading(true);
@@ -128,7 +130,7 @@ export const DoctorDetails = () => {
       }
     } catch (err) {
       console.error('Simulated billing error:', err.message);
-      alert('Payment processing failed.');
+      toast('Payment processing failed.', 'error');
     }
     setPaymentLoading(false);
   };

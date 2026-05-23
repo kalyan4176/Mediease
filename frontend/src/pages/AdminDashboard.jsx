@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import API from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useDialog } from '../context/DialogContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ShieldAlert, Users, CreditCard, Stethoscope, CheckCircle, 
@@ -9,6 +10,7 @@ import {
 
 export const AdminDashboard = () => {
   const { user } = useAuth();
+  const { toast, confirm } = useDialog();
   
   const [activeTab, setActiveTab] = useState('doctors'); // 'doctors', 'departments', 'payments'
   const [loading, setLoading] = useState(true);
@@ -60,7 +62,7 @@ export const AdminDashboard = () => {
 
   const handleCreateDepartment = async (e) => {
     e.preventDefault();
-    if (!newDeptName.trim()) return alert('Department name is required');
+    if (!newDeptName.trim()) return toast('Department name is required', 'error');
     setDeptLoading(true);
     try {
       const res = await API.post('/departments', {
@@ -68,54 +70,57 @@ export const AdminDashboard = () => {
         description: newDeptDesc.trim(),
       });
       if (res.data.success) {
-        alert('Department created successfully');
+        toast('Department created successfully');
         setShowDeptModal(false);
         setNewDeptName('');
         setNewDeptDesc('');
         fetchAdminData();
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to create department');
+      toast(err.response?.data?.message || 'Failed to create department', 'error');
     }
     setDeptLoading(false);
   };
 
   const handleDeleteDepartment = async (deptId) => {
-    if (!window.confirm('Are you sure you want to delete this department?')) return;
+    const verified = await confirm('Are you sure you want to delete this department?');
+    if (!verified) return;
     try {
       const res = await API.delete(`/departments/${deptId}`);
       if (res.data.success) {
-        alert('Department deleted successfully');
+        toast('Department deleted successfully');
         fetchAdminData();
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to delete department');
+      toast(err.response?.data?.message || 'Failed to delete department', 'error');
     }
   };
 
   const handleApproveDoctor = async (docId) => {
-    if (!window.confirm('Do you verify these qualifications and approve this doctor slot?')) return;
+    const verified = await confirm('Do you verify these qualifications and approve this doctor slot?');
+    if (!verified) return;
     try {
       const res = await API.put(`/doctors/approve/${docId}`, { status: 'approved' });
       if (res.data.success) {
-        alert('Doctor activated and approved successfully.');
+        toast('Doctor activated and approved successfully.');
         fetchAdminData();
       }
     } catch (err) {
-      alert('Verification approval failed.');
+      toast('Verification approval failed.', 'error');
     }
   };
 
   const handleRejectDoctor = async (docId) => {
-    if (!window.confirm('Are you sure you want to reject this clinical application?')) return;
+    const verified = await confirm('Are you sure you want to reject this clinical application?');
+    if (!verified) return;
     try {
       const res = await API.put(`/doctors/approve/${docId}`, { status: 'rejected' });
       if (res.data.success) {
-        alert('Doctor application status updated to rejected.');
+        toast('Doctor application status updated to rejected.');
         fetchAdminData();
       }
     } catch (err) {
-      alert('Rejection failed.');
+      toast('Rejection failed.', 'error');
     }
   };
 

@@ -1,0 +1,3 @@
+# Uploaded files are stored here at runtime.
+# This directory is intentionally kept empty in the repository.
+# Files uploaded by users (doctor photos, etc.) are NOT tracked by git.

@@ -1,165 +1,279 @@
-# Mediease - Hospital Consultation Portal
+# 🏥 Mediease – Online Medical Consultation Portal
 
-Mediease is a modern, responsive, and secure MERN-stack Hospital Consultation Portal that allows Patients to book and conduct digital video consultations, Doctors to manage clinical schedules and issue digital prescriptions, and Administrators to oversee hospital operations and onboard medical practitioners.
-
-The system features real-time Socket.io communication, WebRTC signaling wrappers, dynamic PDFKit prescription generation, and a fully simulated Stripe checkout flow.
+> A full-stack MERN application for booking and managing online doctor consultations, featuring live video chat rooms, prescriptions, payments, and multi-role dashboards.
 
 ---
 
-## 🌟 Key Features
+## 🚀 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite, TailwindCSS, Framer Motion |
+| Backend | Node.js, Express.js |
+| Database | MongoDB (Mongoose) |
+| Real-time | Socket.io |
+| Auth | JWT (JSON Web Tokens) |
+| File Upload | Multer |
+| PDF Generation | PDFKit |
+
+---
+
+## ✨ Features
 
 ### 👤 Patient Portal
-- **Onboarding & Verification**: OTP-based email verification using local SMTP/Mock transport logs.
-- **Search Panel**: Advanced physician search by specialization, experience, consult fee caps, and ratings.
-- **Scheduler**: Weekly time slot bookings with duplicate booking prevention.
-- **Billing Checkout**: Simulated Stripe gateway popups updating booking records directly to "confirmed".
-- **Live Consultation Room**: Private symptom messaging and simulated audio-video WebRTC panels.
-- **Records Locker**: Clean listing of consult records with static PDF prescription downloads.
-- **Feedback & Rating**: Multi-star reviews with dynamic doctor average re-calculations.
+- Register with strict email & strong password validation
+- Book appointments with available doctors by slot
+- Simulated payment & appointment confirmation
+- Live video consultation room (WebRTC-ready with Socket.io)
+- Download PDF prescriptions post-consultation
+- Rate and review doctors
+- Medical profile (blood group, allergies, emergency contact)
 
 ### 🩺 Doctor Portal
-- **Activation Review**: Secure admin-locked pending state on initial onboarding.
-- **Availability Planner**: Interactive weekday hour slot configuration desk.
-- **Schedules Timeline**: Dashboard tracking pending, confirmed, and diagnosed consultations.
-- **Prescription Compiler**: Medical dossier compiler (symptoms, diagnoses, and multi-row medicine dosage duration charts) converting records directly to PDF format.
+- Register and await admin approval before login
+- Manage weekly slot availability
+- View and manage patient appointments
+- Launch consultation rooms & send real-time chat messages
+- Issue prescriptions with diagnosis, symptoms & medicines
+- Upload profile photo (visible to patients)
+- Edit clinical profile (specialization, fee, qualifications, etc.)
 
-### 🔑 Admin Portal
-- **Applications Auditor**: Onboarding desk to review credentials, approve, or reject new doctor profiles.
-- **Department Panel**: Analytics dashboard tracking active doctors and visit metrics across clinical units.
-- **Financial Desk**: Operations ledger listing transaction IDs, patient emails, payment methods, and fees processed.
-
----
-
-## ⚙️ Tech Stack
-
-- **Frontend**: React 19 (Vite), React Router DOM v6, Tailwind CSS, Lucide Icons, Framer Motion, Socket.io Client, Axios.
-- **Backend**: Node.js, Express.js (ES Modules), MongoDB & Mongoose.
-- **Services**: Socket.io, PDFKit, Nodemailer.
+### 🛡️ Admin Portal
+- Approve or reject pending doctor applications
+- Create and manage hospital departments
+- View system-wide appointments & statistics
+- Manage all registered users
 
 ---
 
-## 📁 Workspace Directory Structure
+## 📁 Project Structure
 
 ```
-mediease/
+Mediease/
 ├── backend/
-│   ├── config/             # DB configurations
-│   ├── controllers/        # Express controllers (auth, appointments, prescriptions)
-│   ├── middleware/         # Logger, auth guard, error interceptors, upload parser
-│   ├── models/             # Mongoose schemas (User, Patient, Doctor, Payment, etc.)
-│   ├── routes/             # REST route files (authRoutes, doctorRoutes, etc.)
-│   ├── services/           # Nodemailer mock email & PDFKit script compiler
-│   ├── sockets/            # Socket.io chat & WebRTC signals handler
-│   ├── uploads/            # Local static directory hosting compiled PDFs
-│   ├── .env                # Backend environment configuration
-│   ├── server.js           # Server primary entry listener
-│   └── test_api.js         # Endpoint integration testing suite
+│   ├── config/          # DB connection
+│   ├── controllers/     # Route handlers
+│   ├── middleware/      # Auth, upload, logger, error
+│   ├── models/          # Mongoose schemas
+│   ├── routes/          # Express routers
+│   ├── services/        # Email service
+│   ├── sockets/         # Socket.io event handlers
+│   ├── uploads/         # Runtime uploaded files (gitignored)
+│   ├── seed_admin.js    # Script to create admin account
+│   ├── server.js        # App entry point
+│   └── .env.example     # Environment variable template
+│
 ├── frontend/
 │   ├── src/
-│   │   ├── components/     # Common Navbar & Footer layouts
-│   │   ├── context/        # AuthContext state provider
-│   │   ├── hooks/          # useSocket custom real-time Hook
-│   │   ├── pages/          # Home, Login, Signup, Details, and Dashboards
-│   │   ├── routes/         # AppRoutes layout & role ProtectedRoute
-│   │   ├── index.css       # Custom scrollbars, glass styles, animations
-│   │   ├── main.jsx        # App mounting context
-│   │   └── App.jsx         # Global routes wrapper
-│   ├── .env                # Frontend environment configuration
-│   ├── tailwind.config.js  # Custom Slate/Teal palettes mapping
-│   └── postcss.config.js   # Tailwind compiler linkage
-└── README.md               # Run guide and architecture overview
+│   │   ├── context/     # AuthContext
+│   │   ├── hooks/       # useSocket hook
+│   │   ├── pages/       # All page components
+│   │   ├── routes/      # AppRoutes.jsx
+│   │   └── services/    # Axios API instance
+│   ├── .env.example     # Environment variable template
+│   └── index.html
+│
+└── README.md
 ```
 
 ---
 
-## 🚀 Setup & Execution Guide (From Scratch)
+## ⚙️ Getting Started
 
-Ensure you have **Node.js** (v18+) and **MongoDB** installed and running on your local machine before proceeding.
+### Prerequisites
 
-### Step 1: Clone and Navigate to Directory
-Open a terminal in the folder containing `backend` and `frontend`.
+- [Node.js](https://nodejs.org/) v18 or higher
+- [MongoDB Community Server](https://www.mongodb.com/try/download/community) running locally on port `27017`
+- Git
 
-### Step 2: Configure Environment Variables
+---
 
-#### 1. Backend `.env` configuration:
-Create `backend/.env` containing:
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/mediease.git
+cd mediease
+```
+
+---
+
+### 2. Backend Setup
+
+```bash
+cd backend
+npm install
+```
+
+Copy and configure the environment file:
+
+```bash
+cp .env.example .env
+```
+
+Edit `backend/.env` with your values:
+
 ```env
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/mediease
-JWT_SECRET=mediease_super_secure_jwt_secret_2026
+JWT_SECRET=your_long_random_secret_here
 FRONTEND_URL=http://localhost:5173
-EMAIL_USER=mock_email_user@gmail.com
-EMAIL_PASS=mock_email_password
+
+# Gmail SMTP (get App Password from https://myaccount.google.com/apppasswords)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=465
+EMAIL_SECURE=true
+EMAIL_USER=your_gmail@gmail.com
+EMAIL_PASS=your_16_char_app_password
 ```
 
-#### 2. Frontend `.env` configuration:
-Create `frontend/.env` containing:
+Start the backend:
+
+```bash
+npm run dev
+```
+
+> Backend runs at **http://localhost:5000**
+
+---
+
+### 3. Frontend Setup
+
+```bash
+cd ../frontend
+npm install
+```
+
+Copy and configure the environment file:
+
+```bash
+cp .env.example .env
+```
+
+The default `frontend/.env` values work out-of-the-box for local dev:
+
 ```env
 VITE_API_URL=http://localhost:5000/api
 VITE_SOCKET_URL=http://localhost:5000
 ```
 
-### Step 3: Install Dependencies & Run Backend
+Start the frontend:
 
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Install packages:
-   ```bash
-   npm install
-   ```
-3. Start in development mode (hot reloading via nodemon):
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev
+```
 
-### Step 4: Install Dependencies & Run Frontend
-
-1. Open a new terminal and navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install packages:
-   ```bash
-   npm install --legacy-peer-deps
-   ```
-3. Start the Vite server:
-   ```bash
-   npm run dev
-   ```
-4. Access the web app at [http://localhost:5173/](http://localhost:5173/).
-
-### Step 5: Seeding & Signing In as Administrator
-
-To onboard new doctors and inspect clinic transactions, you must be signed in as an administrator:
-1. Open a terminal and navigate to the `backend/` directory.
-2. Run the seeding script to populate the default administrator account inside your MongoDB instance:
-   ```bash
-   node seed_admin.js
-   ```
-3. Open your browser, navigate to the **Login Page** (`http://localhost:5173/login`) and enter the default admin credentials:
-   - **Email**: `admin@mediease.com`
-   - **Password**: `AdminPassword123`
-4. The system will automatically detect the `admin` role, authorize the session, and redirect you to the **Admin Dashboard Console** (`http://localhost:5173/admin`).
+> Frontend runs at **http://localhost:5173**
 
 ---
 
-## 🧪 Testing Backend Services (Automated Suite)
+### 4. Seed the Admin Account
 
-We have built a custom API verification script under `backend/test_api.js`. This script queries Mongoose directly to clean test users, registers accounts, verifies OTPs, logs in accounts, tests doctor approvals, schedules appointments, simulates payment completions, generates PDF prescriptions, and checks that files are served statically.
+In a new terminal (while backend is running):
 
-To run the automated endpoint validation suite:
-1. Ensure the backend server is running in a terminal.
-2. Open a separate terminal, navigate to the `backend/` directory, and run:
-   ```bash
-   node test_api.js
-   ```
+```bash
+cd backend
+node seed_admin.js
+```
+
+This creates the default admin account:
+
+| Field | Value |
+|---|---|
+| Email | `admin@mediease.com` |
+| Password | `AdminPassword123` |
+| Role | `admin` |
 
 ---
 
-## 🛡️ Security Abstractions & Details
+## 🔐 Default Login Credentials
 
-1. **Role-Based Guards**: Protected routes (`ProtectedRoute.jsx`) on the client and route level middleware checks (`protect, authorize('admin')`) on the backend prevent privilege escalation.
-2. **Offline Data Storage**: OTP verification states are fully stored in MongoDB with 10-minute expiry timestamps.
-3. **Data Integrity**: Patient and Doctor collections use a strict 1-to-1 ref mapping matching their base User schema IDs.
+| Role | Email | Password |
+|---|---|---|
+| **Admin** | `admin@mediease.com` | `AdminPassword123` |
+| **Doctor** | Register via `/signup` → Doctor tab | Pending admin approval |
+| **Patient** | Register via `/signup` → Patient tab | Instant access |
+
+---
+
+## 🔑 Password Policy
+
+All accounts require a **strong password** that includes:
+- Minimum **8 characters**
+- At least **1 uppercase** letter (A–Z)
+- At least **1 lowercase** letter (a–z)
+- At least **1 number** (0–9)
+- At least **1 special character** from: `@$!%*?&_-#`
+
+Example valid password: `Mediease@2026`
+
+---
+
+## 🩺 Doctor Registration & Approval Flow
+
+1. Doctor registers at `/signup` → **Doctor Application** tab
+2. Application is saved with `approvalStatus: pending`
+3. Admin logs in at `/admin` → **Doctor Approvals** section
+4. Admin clicks **Approve** or **Reject**
+5. Approved doctors can then log in at `/login`
+
+---
+
+## 📋 API Reference (Key Endpoints)
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| POST | `/api/auth/register` | Register patient | Public |
+| POST | `/api/auth/register-doctor` | Register doctor | Public |
+| POST | `/api/auth/login` | Login any user | Public |
+| GET | `/api/doctors` | List approved doctors | Public |
+| PUT | `/api/doctors/approve/:id` | Approve/reject doctor | Admin |
+| POST | `/api/appointments/book` | Book appointment | Patient |
+| GET | `/api/appointments` | Get my appointments | Auth |
+| POST | `/api/prescriptions/issue` | Issue prescription | Doctor |
+| POST | `/api/users/upload-avatar` | Upload profile photo | Auth |
+| GET | `/api/departments` | List departments | Public |
+| POST | `/api/departments` | Create department | Admin |
+
+---
+
+## 🌐 Application Routes
+
+| Path | Page | Access |
+|---|---|---|
+| `/` | Home | Public |
+| `/login` | Login | Public |
+| `/signup` | Register | Public |
+| `/doctors` | Browse Doctors | Public |
+| `/doctors/:id` | Doctor Details & Booking | Public |
+| `/patient` | Patient Dashboard | Patient |
+| `/doctor` | Doctor Dashboard | Doctor |
+| `/admin` | Admin Dashboard | Admin |
+
+---
+
+## 📸 Screenshots
+
+> *(Add screenshots of your app here after deployment)*
+
+---
+
+## 🛠️ Development Notes
+
+- The `backend/uploads/` folder is ignored by git — doctor photos are stored here at runtime
+- Socket.io is used for real-time consultation chat between patient and doctor
+- PDF prescriptions are generated server-side using PDFKit
+- Payment flow is simulated (no real payment gateway integrated)
+
+---
+
+## 📄 License
+
+This project is for educational purposes — SRM AP University Final Year Project.
+
+---
+
+## 👨‍💻 Author
+
+**Venkata Kalyan Reddy Kota**  
+SRM University AP  
+`venkatakalyanreddy_kota@srmap.edu.in`

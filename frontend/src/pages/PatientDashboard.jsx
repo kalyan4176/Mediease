@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import API from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../hooks/useSocket';
+import { useDialog } from '../context/DialogContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Calendar, FileText, CreditCard, Stethoscope, Video, Send, 
@@ -11,6 +13,7 @@ import {
 export const PatientDashboard = () => {
   const { user, syncDetailedProfile } = useAuth();
   const { socket, joinRoom, sendMessage } = useSocket();
+  const { toast, alert, confirm } = useDialog();
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) return '';
@@ -100,7 +103,7 @@ export const PatientDashboard = () => {
     e.preventDefault();
     setProfileLoading(true);
     try {
-      const res = await API.put('/users/update-profile', {
+      const res = await API.put('/users/profile', {
         name: user.name,
         phone: user.phone,
         gender: user.gender,
@@ -116,23 +119,25 @@ export const PatientDashboard = () => {
       });
       if (res.data.success) {
         await syncDetailedProfile();
-        alert('Medical profile details updated successfully.');
+        toast('Medical profile details updated successfully.');
       }
     } catch (err) {
-      alert('Failed to update medical details.');
+      toast('Failed to update medical details.', 'error');
     }
     setProfileLoading(false);
   };
 
   const handleCancelAppointment = async (appId) => {
-    if (!window.confirm('Are you sure you want to cancel this consultation slot?')) return;
+    const verified = await confirm('Are you sure you want to cancel this consultation slot?');
+    if (!verified) return;
     try {
       const res = await API.delete(`/appointments/cancel/${appId}`);
       if (res.data.success) {
         fetchDashboardData();
+        toast('Consultation slot cancelled successfully.');
       }
     } catch (err) {
-      alert('Cancellation failed.');
+      toast('Cancellation failed.', 'error');
     }
   };
 
@@ -170,11 +175,11 @@ export const PatientDashboard = () => {
         if (verifyRes.data.success) {
           setShowCheckout(false);
           fetchDashboardData();
-          alert('Consultation fee paid successfully! Slot is now confirmed.');
+          toast('Consultation fee paid successfully! Slot is now confirmed.');
         }
       }
     } catch (err) {
-      alert('Checkout failed.');
+      toast('Checkout failed.', 'error');
     }
     setPaymentLoading(false);
   };
@@ -194,10 +199,10 @@ export const PatientDashboard = () => {
         setRating(5);
         setReviewText('');
         fetchDashboardData();
-        alert('Thank you! Review and rating submitted successfully.');
+        toast('Thank you! Review and rating submitted successfully.');
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Review failed.');
+      toast(err.response?.data?.message || 'Review failed.', 'error');
     }
   };
 
@@ -211,10 +216,10 @@ export const PatientDashboard = () => {
           const pdfLink = `http://localhost:5000${res.data.prescription.generatedPDF}`;
           window.open(pdfLink, '_blank');
         } else {
-          alert('Prescription PDF is compiling. Try again in a moment.');
+          toast('Prescription PDF is compiling. Try again in a moment.', 'info');
         }
       })
-      .catch(() => alert('No digital prescription found for this visit slot.'));
+      .catch(() => toast('No digital prescription found for this visit slot.', 'error'));
   };
 
   return (

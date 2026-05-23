@@ -19,7 +19,7 @@ async function seedAdmin() {
       await User.create({
         name: 'Mediease Administrator',
         email: adminEmail,
-        password: 'AdminPassword123', // Will be hashed automatically by User model pre-save hook
+        password: 'Admin@12345', // Will be hashed automatically by User model pre-save hook
         role: 'admin',
         phone: '18005550199',
         gender: 'other',
@@ -28,7 +28,7 @@ async function seedAdmin() {
       console.log('--------------------------------------------------');
       console.log('🎉 Default Administrator Seeded Successfully!');
       console.log(`Email:    ${adminEmail}`);
-      console.log('Password: AdminPassword123');
+      console.log('Password: Admin@12345');
       console.log('--------------------------------------------------');
     }
   } catch (error) {

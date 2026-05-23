@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import API from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../hooks/useSocket';
+import { useDialog } from '../context/DialogContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Stethoscope, Calendar, Clock, FileText, Send, User, 
@@ -11,6 +12,7 @@ import {
 export const DoctorDashboard = () => {
   const { user, syncDetailedProfile } = useAuth();
   const { socket, joinRoom, sendMessage } = useSocket();
+  const { toast } = useDialog();
 
   const [activeTab, setActiveTab] = useState('home'); // 'home', 'appointments', 'schedule', 'profile'
   const [loading, setLoading] = useState(true);
@@ -113,10 +115,10 @@ export const DoctorDashboard = () => {
       });
       if (res.data.success) {
         setProfileImg(res.data.fileUrl);
-        alert('Avatar uploaded successfully! Click "Save Profile Changes" to update.');
+        toast('Avatar uploaded successfully! Click "Save Profile Changes" to update.');
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to upload avatar image.');
+      toast(err.response?.data?.message || 'Failed to upload avatar image.', 'error');
     }
     setUploadingImage(false);
   };
@@ -139,10 +141,10 @@ export const DoctorDashboard = () => {
       });
       if (res.data.success) {
         await syncDetailedProfile();
-        alert('Doctor profile updated successfully!');
+        toast('Doctor profile updated successfully!');
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to update profile.');
+      toast(err.response?.data?.message || 'Failed to update profile.', 'error');
     }
     setProfileUpdating(false);
   };
@@ -183,10 +185,10 @@ export const DoctorDashboard = () => {
 
       if (res.data.success) {
         setAvailability(res.data.availability);
-        alert('Weekly availability updated successfully.');
+        toast('Weekly availability updated successfully.');
       }
     } catch (err) {
-      alert('Failed to update clinical availability.');
+      toast('Failed to update clinical availability.', 'error');
     }
     setScheduleLoading(false);
   };
@@ -201,9 +203,10 @@ export const DoctorDashboard = () => {
 
       if (res.data.success) {
         setAvailability(res.data.availability);
+        toast('Availability removed successfully.');
       }
     } catch (err) {
-      alert('Removal failed.');
+      toast('Removal failed.', 'error');
     }
     setScheduleLoading(false);
   };
@@ -246,7 +249,7 @@ export const DoctorDashboard = () => {
   const handleSubmitPrescription = async (e) => {
     e.preventDefault();
     if (!diagnosis || !symptoms || medicines.some((m) => !m.name)) {
-      return alert('Please fill in complete clinical parameters and medicines.');
+      return toast('Please fill in complete clinical parameters and medicines.', 'error');
     }
 
     setPrescriptionLoading(true);
@@ -259,12 +262,12 @@ export const DoctorDashboard = () => {
       });
 
       if (res.data.success) {
-        alert('Digital prescription PDF generated and compiled successfully!');
+        toast('Digital prescription PDF generated and compiled successfully!');
         setActiveConsultation(null);
         fetchDoctorData();
       }
     } catch (err) {
-      alert('Failed to compile prescription.');
+      toast('Failed to compile prescription.', 'error');
     }
     setPrescriptionLoading(false);
   };
